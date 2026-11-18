@@ -2,18 +2,18 @@
 <html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ProjectOps</title><link rel="stylesheet" href="style.css"></head>
 <body><div class="wrap">
-  <p class="kicker">Strumento 3</p>
-  <h1>ProjectOps</h1>
-  <p class="sub">Trasforma il tuo foglio di attività in un report settimanale. Lo firmi con il tuo nome e la data.</p>
+  <p class="kicker">ProjectOps — strumenti pubblici di <a href="https://riccardobozzato.com/">Riccardo Bozzato</a></p>
+  <h1>Il report settimanale ha un autore. Lo firmi tu.</h1>
+  <p class="sub">Prende cinque attività di esempio, conta punti completati e attività senza responsabile, e scrive una bozza di report. La firmi con nome e data. Non manda nulla a nessuno.</p>
 
   <div class="grid cols-2" style="margin-top:18px">
     <div class="card">
-      <h2>1. Attività (esempio)</h2>
+      <h2>01 · Le attività</h2>
       <table><thead><tr><th>Attività</th><th>Responsabile</th><th>Stato</th></tr></thead><tbody id="tab"></tbody></table>
       <button onclick="calcola()">Prepara il report</button>
     </div>
     <div class="card accent">
-      <h2>2. Report settimanale</h2>
+      <h2>02 · Il report</h2>
       <div class="grid cols-3" style="gap:8px">
         <div><div class="kpi" id="k1">—</div><div class="hint">Avanzamento</div></div>
         <div><div class="kpi" id="k2">—</div><div class="hint">Senza responsabile</div></div>
@@ -24,8 +24,9 @@
       <button class="ok" id="app" disabled onclick="app()">Firma come PM</button>
     </div>
   </div>
-  <div class="card" style="margin-top:14px"><h2>3. Registro modifiche</h2><div class="log" id="log"><div class="t">—</div></div></div>
-  <p class="foot">Dati di esempio. Nessun invio automatico.</p>
+  <div class="card" style="margin-top:14px"><h2>03 · Registro</h2><div class="log" id="log"><div class="t">—</div></div></div>
+  <p class="foot">Attività e nomi inventati. La firma è un gesto nel browser: non invia email e non salva nulla su un server.</p>
+  <p class="foot"><a href="https://github.com/Riccardobozzato94/project-ops">Codice su GitHub</a> · <a href="https://riccardobozzato.com/metodo">Come lavoro</a> · <a href="https://riccardobozzato.com/contatti">Parliamone</a></p>
 </div>
 <script>
 var task=[{n:'Analisi requisiti',o:'Riccardo',s:'fatto',p:8},{n:'Modello dati',o:'Marta',s:'fatto',p:5},{n:'Integrazione API',o:'Luca',s:'aperto',p:13},{n:'Collaudo',o:'Sara',s:'aperto',p:8},{n:'Documentazione',o:'',s:'aperto',p:3}],log=[];
