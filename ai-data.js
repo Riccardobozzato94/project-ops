@@ -26,5 +26,59 @@ window.AI_CAPTURED = {
     "prossimo": "",
     "raw": " Didn't invent any.\n   - Flag missing data without correcting? Yes, explicitly states what's missing.\n   - Concrete Italian? Yes.\n   - ONLY JSON output? Will ensure no markdown or extra text.\n\n   Let's verify the JSON structure carefully:\n   ```json\n   {\n     \"narrativa\": \"Il progetto \\\"campione fittizio\\\" registra un avanzamento del 54%, con 13 punti completati su 24 totali. Sono state identificate 2 attività a rischio slittamento e 1 attività priva di un responsabile assegnato. Il ritmo di consegna rimane stabile ma richiede attenzione sui punti critici segnalati.\",\n     \"qualita_dati\": \"I dati forniti non includono metriche su budget, ore lavorate o priorità delle attività, limitando l'analisi completa dello stato di salute del progetto.\",\n     \"prossimo_passo\": \"Assegnare un owner all'attività orfana e valutare i piani di mitigazione per i due potenziali slittamenti entro la prossima",
     "prompt": "Sei un assistente per report settimanali di progetto. Ti do KPI gia' calcolati in JSON. Produci SOLO un oggetto JSON valido:\n{\"narrativa\":\"3 frasi max\",\"qualita_dati\":\"un breve avviso sui dati mancanti\",\"prossimo_passo\":\"una frase\"}\nRegole: non ricalcolare i numeri, non inventarne, segnala i dati mancanti senza correggerli. Italiano concreto. Non scrivere null'altro fuori dal JSON.\nKPI: {\"avanzamento_percent\":54,\"punti_fatti\":13,\"punti_totali\":24,\"attivita_senza_owner\":1,\"slittamenti_potenziali\":2,\"progetto\":\"campione fittizio\"}"
+  },
+  "relay_fixed": {
+    "status": "approvato dopo correzione",
+    "model": "Qwen3.6-27B",
+    "captured_at": "2026-11-18T13:08:46.465049+00:00",
+    "prompt": "Rispondi SOLO con un oggetto JSON valido. Inizia con { e finisci con }. Nessun pensiero, nessuna spiegazione, nessun backtick.\n{\"narrativa\":[\"frase 1\",\"frase 2\",\"frase 3\"],\"flag\":\"\",\"prossimo_passo\":\"frase operativa\"}\nDati reali: cliente Studio Alfa, sessioni 18420 questo mese vs 15900 il mese scorso, conversioni 427, spesa 3200 euro, CPA 7.49 euro.\nScrivi 3 frasi concrete in italiano usando SOLO questi numeri. Non inventare altri numeri. Non calcolare percentuali non date. flag vuoto se nessun peggioramento.",
+    "json": {
+      "narrativa": [
+        "Studio Alfa ha registrato 18420 sessioni questo mese, un aumento rispetto alle 15900 del mese scorso.",
+        "Le campagne hanno generato 427 conversioni con una spesa totale di 3200 euro.",
+        "Il costo per acquisizione si attesta a 7.49 euro per conversione."
+      ],
+      "flag": "",
+      "prossimo_passo": "Ottimizzare le keyword a basso rendimento per mantenere il CPA attuale."
+    },
+    "raw_tail": "l make sure there are no newlines or formatting that could be construed as non-JSON, but standard JSON formatting is fine. I'll keep it compact to be safe. All good. \n   Output generation. \n   `{ \"narrativa\": [ \"Studio Alfa ha registrato 18420 sessioni questo mese, un aumento rispetto alle 15900 del mese scorso.\", \"Le campagne hanno generato 427 conversioni con una spesa totale di 3200 euro.\", \"Il costo per acquisizione si attesta a 7.49 euro per conversione.\" ], \"flag\": \"\", \"prossimo_passo\": \"Ottimizzare le keyword a basso rendimento per mantenere il CPA attuale.\" }` -> I'll remove spaces/new",
+    "note": "Prompt riscritto con vincolo \"inizia con { e finisci con }\": l’AI ha emesso narrativa corretta, poi l’umano ha rimosso il ragionamento finale e firmato."
+  },
+  "pago_toni": {
+    "fermo": {
+      "oggetto": "Sollecito di pagamento fattura F-001 - Studio Alfa",
+      "testo": "Spett.le Studio Alfa, con la presente si ricorda che la fattura n. F-001, per un importo di € 1.250,00, risulta ancora insoluta nonostante la scadenza sia trascorsa da 14 giorni. Si richiede il regolare saldo entro e non oltre 5 giorni dalla data di invio, al fine di evitare l'applicazione di interessi moratori e spese di recupero come previsto dal contratto. Restiamo in attesa di Vostro sollecito riscontro e della relativa quietanza di pagamento. Cordiali saluti.",
+      "perche": "La fattura F-001 è in ritardo di 14 giorni rispetto alla data di scadenza contrattuale, rendendo necessario un sollecito formale per garantire il regolare flusso di cassa e rispettare le condizioni di pagamento concordate.",
+      "model": "Qwen3.6-27B",
+      "days": 14,
+      "captured_at": "2026-11-18T13:19:20.998279+00:00"
+    },
+    "ultimo avviso": {
+      "oggetto": "Ultimo avviso: pagamento fattura F-001 - Studio Alfa",
+      "testo": "Gentile cliente, si ricorda che la fattura F-001 di € 1.250,00 è in ritardo di 24 giorni. Si richiede il saldo immediato per evitare procedure di recupero crediti. Restiamo in attesa di conferma bonifico. Cordiali saluti, Studio Alfa.",
+      "perche": "La fattura F-001 risulta insoluta da 24 giorni; il presente messaggio costituisce l'ultimo formale sollecito prima dell'avvio delle procedure di recupero.",
+      "model": "Qwen3.6-27B",
+      "days": 24,
+      "captured_at": "2026-11-18T13:19:20.998279+00:00"
+    },
+    "cordiale": {
+      "oggetto": "Promemoria cordiale per la fattura F-001",
+      "testo": "Gentile Studio Alfa, le ricordiamo gentilmente il pagamento della fattura F-001 di importo €1250, che è scaduta da 5 giorni. Apprezziamo la sua collaborazione.",
+      "perche": "Il tono cordiale è scelto per facilitare la comunicazione e mantenere un rapporto positivo.",
+      "model": "dots-studio/dots-3-note-preview:free",
+      "days": 5,
+      "captured_at": "2026-11-18T11:42:05.504746+00:00",
+      "note": "output valido dalla prima cattura"
+    }
+  },
+  "pago_toni_captured_at": "2026-11-18T13:16:12.180267+00:00",
+  "proj_fixed": {
+    "status": "completato",
+    "model": "Qwen3.6-27B",
+    "captured_at": "2026-11-18T13:25:01.260227+00:00",
+    "prompt": "Restituisci ESATTAMENTE un oggetto JSON: {\"prossimo_passo\":\"una frase operativa\"}. Nessun carattere prima o dopo.\nContesto: progetto con avanzamento 54% (13/24 punti), 1 attività senza owner, 2 slittamenti potenziali. Italiano concreto da PMP.",
+    "prossimo_passo": "Assegnare immediatamente un responsabile all'attività senza owner, analizzare l'impatto dei due slittamenti sul percorso critico e aggiornare il piano di progetto con le contromisure preventive concordate.",
+    "raw": "\n\n{\"prossimo_passo\":\"Assegnare immediatamente un responsabile all'attività senza owner, analizzare l'impatto dei due slittamenti sul percorso critico e aggiornare il piano di progetto con le contromisure preventive concordate.\"}",
+    "note": "Il campo troncato nella prima cattura è stato rigenerato con prompt mirato e unito alla narrativa originale; l’umano ha firmato il report completo."
   }
 };

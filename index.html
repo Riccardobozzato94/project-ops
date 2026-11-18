@@ -62,6 +62,20 @@
     <pre id="aiRawProj" style="background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;font:11px/1.5 ui-monospace,monospace;white-space:pre-wrap;max-height:180px;overflow:auto;color:var(--slate)"></pre>
     <div class="note" id="aiNoteProj"></div>
     <p style="font-size:12px;color:var(--slate);margin-top:10px"><strong>Cosa dimostra:</strong> l'AI ha prodotto una narrativa corretta e ha segnalato i dati mancanti — ma il JSON è stato troncato dal limite di token. Il campo finale è stato corretto a mano prima della firma. <strong>Il tool segnala, non corregge al posto del PM</strong>: è il principio umano-nei-punti-critici applicato a un errore reale.</p>
+
+    <div class="hr"></div>
+    <h3>DOPO — campo mancante rigenerato con prompt mirato</h3>
+    <p class="kpi-label">Modello: <span id="projFixModel">—</span> · catturato il <span id="projFixDate">—</span></p>
+    <p style="font-size:13px" id="projFixText"></p>
+    <div class="note" id="projFixNote"></div>
+
+    <div class="hr"></div>
+    <h3>Changelog build-in-public</h3>
+    <div class="log" id="changelog">
+      <div><span class="t">18/11 · 01</span> · <span class="a">v0.1</span> — primo output AI catturato: narrativa corretta, JSON troncato</div>
+      <div><span class="t">18/11 · 02</span> · <span class="w">v0.2</span> — aggiunti flag qualità dati (campi vuoti segnalati, non corretti)</div>
+      <div><span class="t">18/11 · 03</span> · <span class="a">v0.3</span> — prompt mirato per il campo mancante, report completo firmato</div>
+    </div>
   </div>
 
   <div class="card">
@@ -153,6 +167,12 @@ setState('vuoto');
   document.getElementById('aiQual').textContent = d.proj.qualita;
   document.getElementById('aiRawProj').textContent = d.proj.raw;
   document.getElementById('aiNoteProj').textContent = 'DECISIONE UMANA: ' + d.proj.status.toUpperCase() + ' — ' + d.proj.note;
+  var fx = d.proj_fixed;
+  if (!fx) return;
+  document.getElementById('projFixModel').textContent = fx.model;
+  document.getElementById('projFixDate').textContent = fx.captured_at;
+  document.getElementById('projFixText').textContent = fx.prossimo_passo;
+  document.getElementById('projFixNote').textContent = 'DECISIONE UMANA: ' + fx.status.toUpperCase() + ' — ' + fx.note;
 })();
 </script>
 </body>
