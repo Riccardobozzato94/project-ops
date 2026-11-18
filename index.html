@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ProjectOps — demo (dati sintetici)</title>
+<link rel="stylesheet" href="style.css" />
+<script src="ai-data.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <p class="kicker">Social proof · AI Operations · Demo 3/3</p>
+  <h1>ProjectOps</h1>
+  <p class="sub">Da foglio di calcolo a report settimanale. KPI calcolati, narrativa AI, approvazione del PM, storico completo di ogni valore. <strong>Il report pubblicato porta la firma del PM.</strong></p>
+  <span class="badge">DEMO · DATI SINTETICI</span>
+  <span class="badge ok">0 € di costo</span>
+  <span class="badge">Flusso: foglio → KPI → bozza → firma PM</span>
+  <span class="badge">AI REALE — output troncato, corretto dall'umano</span>
+
+  <div class="grid cols-2" style="margin-top:22px">
+    <div class="card">
+      <h2>1 · Foglio di calcolo (fittizio)</h2>
+      <table>
+        <thead><tr><th>Attività</th><th>Owner</th><th>Scadenza</th><th>Stato</th><th>Punti</th></tr></thead>
+        <tbody id="task"></tbody>
+      </table>
+      <div class="flag" id="flags"></div>
+      <button onclick="calcola()">Calcola KPI e genera bozza</button>
+    </div>
+
+    <div class="card accent">
+      <h2>2 · Report settimanale</h2>
+      <div class="grid cols-3" style="gap:10px">
+        <div><div class="kpi" id="kAv">—</div><div class="kpi-label">Avanzamento</div></div>
+        <div><div class="kpi" id="kRi">—</div><div class="kpi-label">Rischi</div></div>
+        <div><div class="kpi" id="kSl">—</div><div class="kpi-label">Slittamenti</div></div>
+      </div>
+      <div class="hr"></div>
+      <p class="kpi-label">Stato</p>
+      <p><span class="state draft" id="stato">draft</span></p>
+      <label>Narrativa (modificabile dal PM)</label>
+      <textarea id="bozza" placeholder="Premi 'Calcola KPI'"></textarea>
+      <button class="ok" id="approva" disabled onclick="approva()">Firma come PM</button>
+      <button class="ghost" id="pubblica" disabled onclick="pubblica()">Pubblica report</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>3 · Storico valori (log nativo)</h2>
+    <p class="kpi-label">Ogni modifica del foglio resta tracciata: chi, cosa, quando</p>
+    <div class="log" id="log"><div class="t">— nessuna modifica registrata —</div></div>
+  </div>
+
+  <div class="card">
+    <h2>Output AI reale — catturato dal router locale</h2>
+    <p class="kpi-label">Modello: <span id="aiModelProj">—</span> · catturato il <span id="aiDateProj">—</span></p>
+    <h3 style="margin-top:12px">Narrativa generata</h3>
+    <p id="aiNarr" style="font-size:13px"></p>
+    <h3>Flag qualità dati</h3>
+    <p id="aiQual" style="font-size:12px;color:var(--warn)"></p>
+    <h3>Output grezzo (finale, troncato)</h3>
+    <pre id="aiRawProj" style="background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;font:11px/1.5 ui-monospace,monospace;white-space:pre-wrap;max-height:180px;overflow:auto;color:var(--slate)"></pre>
+    <div class="note" id="aiNoteProj"></div>
+    <p style="font-size:12px;color:var(--slate);margin-top:10px"><strong>Cosa dimostra:</strong> l'AI ha prodotto una narrativa corretta e ha segnalato i dati mancanti — ma il JSON è stato troncato dal limite di token. Il campo finale è stato corretto a mano prima della firma. <strong>Il tool segnala, non corregge al posto del PM</strong>: è il principio umano-nei-punti-critici applicato a un errore reale.</p>
+  </div>
+
+  <div class="card">
+    <h2>Social proof — cosa si pubblica</h2>
+    <div class="grid cols-3">
+      <div><h3>Repo open source</h3><p style="font-size:12px;color:var(--slate)">Worker + D1 + calcolo KPI con unit test e guida "deploy in 10 minuti".</p></div>
+      <div><h3>Demo con progetto anonimizzato</h3><p style="font-size:12px;color:var(--slate)">KPI card, narrativa, firma PM visibile e storico log.</p></div>
+      <div><h3>Build in public</h3><p style="font-size:12px;color:var(--slate)">Un post a settimana: cosa ho costruito, cosa è fallito, KPI misurato, changelog.</p></div>
+    </div>
+    <div class="note">Il mini-audit su un foglio reale (usato da 6 mesi) richiede consenso e confronto ore di reporting prima/dopo misurate. <strong>Garbage in → garbage out</strong>: il tool flagga i dati mancanti ma non li corregge.</div>
+  </div>
+
+  <div class="card">
+    <h2>Limiti dichiarati</h2>
+    <p style="font-size:12px;color:var(--slate)">Dati finti, calcolo e narrativa simulati. La qualità del report dipende dalla qualità del foglio: i flag di qualità segnalano, non risolvono. Nessun risultato commerciale è dimostrato da questa demo.</p>
+  </div>
+
+  <p class="foot">PMP® · AI Operations · Umano che risponde · Logging · KPI — Demo pubblica su GitHub Pages (gratis).</p>
+</div>
+
+<script>
+var task = [
+  { n:'Discovery e analisi requisiti', o:'Riccardo', sc:'03/11', s:'done', p:8 },
+  { n:'Modello dati', o:'Marta', sc:'07/11', s:'done', p:5 },
+  { n:'Integrazione API', o:'Luca', sc:'12/11', s:'open', p:13 },
+  { n:'Test collaudo', o:'Sara', sc:'15/11', s:'open', p:8 },
+  { n:'Documentazione', o:'', sc:'18/11', s:'open', p:3 }
+];
+var log = [];
+var stato = 'vuoto';
+function t() { return new Date().toISOString().slice(11,19); }
+function addLog(a, cls) {
+  log.push('<div><span class="t">' + t() + '</span> · <span class="' + cls + '">' + a + '</span></div>');
+  document.getElementById('log').innerHTML = log.join('');
+}
+function render() {
+  document.getElementById('task').innerHTML = task.map(function(x, i) {
+    return '<tr><td>' + x.n + '</td><td>' + (x.o || '—') + '</td><td>' + x.sc + '</td>' +
+      '<td><span class="state ' + (x.s === 'done' ? 'approved' : 'draft') + '">' + x.s + '</span></td>' +
+      '<td>' + x.p + '</td></tr>';
+  }).join('');
+  varvuoti = task.filter(function(x){ return !x.o; }).length;
+  document.getElementById('flags').textContent = vuoti ? '⚠ ' + vuoti + ' attività senza owner — segnalato, non corretto' : '✓ nessun dato mancante rilevato';
+}
+function setState(s) {
+  stato = s;
+  var el = document.getElementById('stato');
+  el.textContent = s;
+  el.className = 'state ' + (s === 'draft' ? 'draft' : s === 'firmato' ? 'approved' : s === 'pubblicato' ? 'sent' : '');
+  document.getElementById('approva').disabled = s !== 'draft';
+  document.getElementById('pubblica').disabled = s !== 'firmato';
+}
+function calcola() {
+  var tot = task.reduce(function(a,x){ return a + x.p; }, 0);
+  var done = task.filter(function(x){ return x.s === 'done'; }).reduce(function(a,x){ return a + x.p; }, 0);
+  var av = tot ? Math.round(done / tot * 100) : 0;
+  var rischi = task.filter(function(x){ return x.s === 'open' && !x.o; }).length;
+  var slit = task.filter(function(x){ return x.s === 'open' && x.sc < '15/11'; }).length;
+  document.getElementById('kAv').textContent = av + '%';
+  document.getElementById('kRi').textContent = rischi;
+  document.getElementById('kSl').textContent = slit;
+  var txt = 'REPORT SETTIMANALE — progetto campione (fittizio)\n\n' +
+    'Avanzamento: ' + av + '% dei punti completati (' + done + '/' + tot + ').\n' +
+    'Rischi: ' + rischi + ' attività senza owner.\n' +
+    'Slittamenti potenziali: ' + slit + ' attività con scadenza ravvicinata.\n\n' +
+    'Prossimo passo: assegnare gli owner mancanti e completare l\'integrazione API.';
+  document.getElementById('bozza').value = txt;
+  addLog('KPI calcolati e bozza generata (simulazione)', 'w');
+  setState('draft');
+}
+function approva() {
+  if (stato !== 'draft') return;
+  addLog('report firmato da Riccardo (PM, umano)', 'a');
+  setState('firmato');
+}
+function pubblica() {
+  if (stato !== 'firmato') return;
+  addLog('report pubblicato con firma PM e data', 'a');
+  setState('pubblicato');
+}
+render();
+setState('vuoto');
+(function(){
+  var d = window.AI_CAPTURED;
+  if (!d) return;
+  document.getElementById('aiModelProj').textContent = d.model_proj;
+  document.getElementById('aiDateProj').textContent = d.captured_at;
+  document.getElementById('aiNarr').textContent = d.proj.narrativa;
+  document.getElementById('aiQual').textContent = d.proj.qualita;
+  document.getElementById('aiRawProj').textContent = d.proj.raw;
+  document.getElementById('aiNoteProj').textContent = 'DECISIONE UMANA: ' + d.proj.status.toUpperCase() + ' — ' + d.proj.note;
+})();
+</script>
+</body>
+</html>
